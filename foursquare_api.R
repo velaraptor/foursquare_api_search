@@ -15,6 +15,7 @@ library(rgeos)
 library(rgdal)
 library(httr)
 library(dplyr)
+##code from http://stackoverflow.com/questions/27867846/quick-way-to-get-longitude-latitude-from-city-state-input
 geo_init <- function() {
 
   try({
