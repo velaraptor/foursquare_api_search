@@ -1,3 +1,4 @@
+##created by velaraptor 2016
 ##foursquare api
 client_id="CLIENT_ID"
 client_secret="CLIENT_SECRET"
