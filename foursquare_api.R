@@ -54,7 +54,7 @@ geocode <- function(geo_db, city, state) {
 geo_db <- geo_init()
 
 
-all_cities=geo_db %>% geocode(near.df[,1],near.df[,2])
+all_cities=geo_db %>% geocode(city_state[,4],city_state[,10])
 ll=paste0(all_cities$lat,",",all_cities$lon)
 
 ##==============================================
