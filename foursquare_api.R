@@ -1,8 +1,8 @@
 ##foursquare api
-client_id="MEGISGV3JZZGEGLRHSIXMPNML3XP5HDJ2M5P3KVGBSHDJSSR"
-client_secret="FRG1VZQ30APD3XL3KMTD5VLIDPAJZF55Z30L2DWGHKI1HYIK"
+client_id="CLIENT_ID"
+client_secret="CLIENT_SECRET"
 v="20160101"
-query="animal clinic"
+query="QUERY"
 radius=10000
 ##==============================================
 near.df=read.csv("Desktop/Texas_Cities.csv",header=FALSE)
