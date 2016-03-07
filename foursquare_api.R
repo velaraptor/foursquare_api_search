@@ -6,16 +6,28 @@ v="20160101"
 query="QUERY"
 radius=10000
 ##==============================================
-##list of city names to query
-near.df=read.csv("Desktop/Texas_Cities.csv",header=FALSE)
-near.df[,1]<-as.character(near.df[,1])
-near.df[,2]<-"TX"
+##downloaded from https://developers.google.com/adwords/api/docs/appendix/geotargeting?csw=1
+##this is a big file
+cities<-read.csv("files/cities_google.csv")
+states<-read.csv("files/states_google.csv")
+
+states<-states[,-4]
+names(states)[1]<-"Parent.ID"
+city.state<-merge(cities,states,by="Parent.ID",all=TRUE)
+city.state<-city.state[,-c(9,10,11,12)]
+names(city.state)<-c("Parent.ID","Criteria.ID","City","Canonical.Name","County.Code","Target", "Status","State")
+
+abb<-read.csv("files/abbreviations.csv")
+
+city_state<-merge(city.state,abb,by="State")
+city_state[,10]<-as.character(city_state[,10])
+city_state[,4]<-as.character(city_state[,4])
 ##==============================================
 ##get lat/lon of city centers
-library(rgeos)
-library(rgdal)
-library(httr)
-library(dplyr)
+require(rgeos)
+require(rgdal)
+require(httr)
+require(dplyr)
 ##code from http://stackoverflow.com/questions/27867846/quick-way-to-get-longitude-latitude-from-city-state-input
 geo_init <- function() {
 
@@ -42,8 +54,8 @@ geocode <- function(geo_db, city, state) {
 geo_db <- geo_init()
 
 
-tx=geo_db %>% geocode(near.df[,1],near.df[,2])
-ll=paste0(tx$lat,",",tx$lon)
+all_cities=geo_db %>% geocode(near.df[,1],near.df[,2])
+ll=paste0(all_cities$lat,",",all_cities$lon)
 
 ##==============================================
 foursquare<-function(client_id,client_secret,v,query,radius,near.df){
@@ -65,15 +77,15 @@ foursquare<-function(client_id,client_secret,v,query,radius,near.df){
 	return(foursquare.list);
 }
 ##==============================================
-texas_vets=foursquare(client_id,client_secret,v,query,radius,ll)
+all_vets=foursquare(client_id,client_secret,v,query,radius,ll)
 ##==============================================
 get_business<-function(list){
 	return(list$response$venues)
 }
 
-tx_animals<-lapply(texas_vets,get_business)
-tx_animals<-lapply(tx_animals,flatten)
+all_animals<-lapply(all_vets,get_business)
+all_animals<-lapply(all_animals,flatten)
 
 require(plyr)
-tx_animals_1<-rbind.fill(lapply(tx_animals,function(y){as.data.frame((y),stringsAsFactors=FALSE)}))
-tx_animals_1<-tx_animals_1[!duplicated(tx_animals_1$id),]
+all_animals_1<-rbind.fill(lapply(all_animals,function(y){as.data.frame((y),stringsAsFactors=FALSE)}))
+all_animals_1<-all_animals_1[!duplicated(all_animals_1$id),]
