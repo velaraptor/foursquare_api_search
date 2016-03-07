@@ -5,10 +5,12 @@ v="20160101"
 query="QUERY"
 radius=10000
 ##==============================================
+##list of city names to query
 near.df=read.csv("Desktop/Texas_Cities.csv",header=FALSE)
 near.df[,1]<-as.character(near.df[,1])
 near.df[,2]<-"TX"
 ##==============================================
+##get lat/lon of city centers
 library(rgeos)
 library(rgdal)
 library(httr)
@@ -42,8 +44,6 @@ tx=geo_db %>% geocode(near.df[,1],near.df[,2])
 ll=paste0(tx$lat,",",tx$lon)
 
 ##==============================================
-
-
 foursquare<-function(client_id,client_secret,v,query,radius,near.df){
 	foursquare.list<-list();
 	require(jsonlite);
