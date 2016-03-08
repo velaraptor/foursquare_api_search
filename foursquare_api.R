@@ -84,8 +84,24 @@ get_business<-function(list){
 }
 
 all_animals<-lapply(all_vets,get_business)
-all_animals<-lapply(all_animals,flatten)
+test<-all_animals[sapply(all_animals, length)>=1]
+test<-lapply(test,flatten)
 
 require(plyr)
-all_animals_1<-rbind.fill(lapply(all_animals,function(y){as.data.frame((y),stringsAsFactors=FALSE)}))
+all_animals_1<-rbind.fill(lapply(test,function(y){as.data.frame((y),stringsAsFactors=FALSE)}))
 all_animals_1<-all_animals_1[!duplicated(all_animals_1$id),]
+
+##fix list
+maybe<-data.frame(t(sapply(all_animals_1$categories,c)))
+
+clean_list_data_frame<-function(data){
+	for(i in 1:ncol(data)){
+		data[,i]<-as.character(data[,i])
+	}
+	return(data)
+}
+
+maybe<-clean_list_data_frame(maybe)
+all_animals_1<-within(all_animals_1,rm(categories,venueChains,location.formattedAddress,hereNow.groups,specials.items))
+all_animals_1<-cbind(all_animals_1,maybe)
+
