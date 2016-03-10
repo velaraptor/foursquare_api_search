@@ -16,3 +16,4 @@ To subset specific states you can subset based on the code below:
 test<-subset(all_cities, state %in% c("NY","CA","IL","TX"))
 ```
 ####For more information concerning the Foursquare API check out: https://developer.foursquare.com/docs/venues/search
+##Currently making a package to query foursquare. 
